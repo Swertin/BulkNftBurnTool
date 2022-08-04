@@ -1,0 +1,17 @@
+{
+  "name": "nfttooltemplate",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@metaplex-foundation/js": "^0.13.3",
+    "@solana/pay": "^0.2.1",
+    "@solana/spl-token": "^0.2.0",
+    "@solana/web3.js": "^1.50.1"
+  }
+}
