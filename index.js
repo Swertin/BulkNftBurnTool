@@ -30,17 +30,7 @@ const getTokenWallet = async function (
         )
     )[0];
 };
-const getMetadataAccount = async function (
-    wallet,
-    mint,
-) {
-    return (
-        await PublicKey.findProgramAddress(
-            [wallet.toBuffer(), TOKEN_PROGRAM_ID.toBuffer(), mint.toBuffer()],
-            METAPLEX_TOKEN_METADATA_PROGRAM_ID,
-        )
-    )[0];
-};
+
 async function burnNFT(connection, treasuryKeypair, nftObj) {
     try {
         const wallet = new NodeWallet(treasuryKeypair);
@@ -67,7 +57,6 @@ async function burnNFT(connection, treasuryKeypair, nftObj) {
         burnAndClose.add(burnNFTIx);
         const burnAndCloseTx = await sendAndConfirmTransaction(connection, burnAndClose, [treasuryKeypair]);
 
-        // let txFinalized = false;
         const returnArrayPacket = {
             Success: true,
             burnNFT: burnAndCloseTx
@@ -87,9 +76,7 @@ async function burnNFT(connection, treasuryKeypair, nftObj) {
 
 async function runCriticalTX(connection, treasuryKeypair, nftsToUpdate) {
     const metaplex = Metaplex.make(connection);
-    console.log(nftsToUpdate);
     const nftsToUpdateArray = nftsToUpdate.map(nft => new PublicKey(nft));
-    console.log("NFTs to Burn:", nftsToUpdateArray);
     const lazyNfts = await metaplex.nfts().findAllByMintList(nftsToUpdateArray).run();
     const nfts = await Promise.all(lazyNfts.map(async nft => {
         try {
@@ -99,13 +86,19 @@ async function runCriticalTX(connection, treasuryKeypair, nftsToUpdate) {
             
         }
     }));
-    console.log("NFTs:", nfts);
+    console.log("NFT Burn List:", JSON.stringify(nfts.map((nft)=>{
+        return {
+            name:nft.name,
+            mintHash:nft.mintAddress.toString()
+        }
+    }), null, 2));
+
     let receivableImploded = nfts;
     let returnObj;
     while (receivableImploded.length > 0) {
         const failedArray = new Array;
         let delay = 0;
-        await Promise.all(receivableImploded.map(async (nftObj) => {            //Select function
+        await Promise.all(receivableImploded.map(async (nftObj) => {
             await timeout((delay++) * 15);
             const returnArrayPacket = await burnNFT(connection, treasuryKeypair, nftObj);
             if (returnArrayPacket.Success) {
@@ -139,66 +132,11 @@ async function updateNFTS() {
     })
     const treasuryPrivateKey = process.env.TREASURY
     const treasuryKeypair = Keypair.fromSecretKey(bs58.decode(treasuryPrivateKey))
+    console.log("Burning NFTs Owned by Public Key:", treasuryKeypair.publicKey.toString());
 
-    console.log("Pubkey:", treasuryKeypair.publicKey.toString());
-
-    const hashList = [
-        "B56zRuUzDr21EhENrKtR5nmjyni66XxDKuTArbzZcfhg"
-    ];
+    const hashList = JSON.parse(fs.readFileSync("./hashList.json").toString());
 
     await runCriticalTX(connection, treasuryKeypair, hashList);
 }
 
-const createATA = async(connection, senderKeypair, testMints) => {
-    const tokenPubKey = new PublicKey(testMints[0]);
-    const toTokenAccount = await getOrCreateAssociatedTokenAccount(
-        connection,
-        senderKeypair,
-        tokenPubKey,
-        senderKeypair.publicKey
-    );
-    return toTokenAccount;
-}
-
-const mintToken = async (connection, senderKeypair, token, ATA) => {
-    const metaplex = Metaplex.make(connection);
-
-    const tokenPubKey = new PublicKey(token);
-    const { blockhash } = await (connection.getLatestBlockhash('finalized'))
-    // console.log("Got blockhash", blockhash);
-    const mintNFT = new Transaction({
-        recentBlockhash: blockhash,
-        // The buyer pays the transaction fee
-        feePayer: senderKeypair.publicKey,
-    })
-    const nft = await metaplex.nfts().findByMint(tokenPubKey).run();
-    const mintToIX = createMintToInstruction(tokenPubKey,ATA.address,senderKeypair.publicKey,1);
-    mintNFT.add(mintToIX);
-    const mintTX = await sendAndConfirmTransaction(connection, mintNFT, [senderKeypair]);
-    return mintTX;
-}
-
-const fetchTokens = async (connection, senderKeypair) => {
-    const accounts = await connection.getParsedProgramAccounts(
-        TOKEN_PROGRAM_ID,
-        {
-            filters: [
-                {
-                    dataSize: 165,
-                },
-                {
-                    memcmp: {
-                        offset: 32,
-                        bytes: senderKeypair.publicKey.toString(),
-                    },
-                },
-            ],
-        }
-    );
-    const tokens = accounts.map(accountInfo => accountInfo?.account?.data?.parsed?.info)
-    // .filter(token => console.log(token) && (token.owner == senderKeypair.publicKey.toString()))
-    .map(token => token.mint);
-    console.log(tokens);
-    return tokens;
-};
 updateNFTS();
