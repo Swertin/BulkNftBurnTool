@@ -30,7 +30,7 @@ Export your private key from Phantom.
 Paste the private key in the Treasury field of .env
 <br/>*e.g.* `Treasury=pR1vA73KeYSd1237A...`
 
-Paste your RPC in the RPC field of .env. 
+Paste your RPC in the RPC field of .env
 <br/>*e.g.* `RPC=https://nodemonkey...`
 
 Get a json hashlist array of the nfts that you want to burn, paste it into `hashList.json`, matching the array bracket formatting
