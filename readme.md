@@ -20,7 +20,7 @@ This tool was created to utilize the burnNFT instruction released in the [Metapl
 
 ## To Setup:
 
-Make a copy of .env-example, and name it as `.env`
+Make a copy of .env-example, and name it `.env`
 
 **In the .env file:**<br/>
 
