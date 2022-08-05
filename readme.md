@@ -22,18 +22,19 @@ This tool was created to utilize the burnNFT instruction released in the [Metapl
 
 Make a copy of .env-example, and name it as: .env
 
-In the .env file, <br/>
+**In the .env file:**<br/>
+
 Export your private key from Phantom.
 <br/>**Note: This private key has to be the owner of the nfts that are being burned, otherwise the transaction will fail**
 
 Paste the private key in the Treasury field of .env
-<br/>e.g. `Treasury=pR1vA73KeYSd1237A...`
+<br/>*e.g.* `Treasury=pR1vA73KeYSd1237A...`
 
 Paste your RPC in the RPC field of .env. 
-<br/>e.g. `RPC=https://nodemonkey...`
+<br/>*e.g.* `RPC=https://nodemonkey...`
 
-Get a json hashlist array of the nfts that you want to burn, paste it in [line 145](https://github.com/Swertin/BulkNftBurnTool/blob/6be3a264689dda2e3dddf9389fba43425647414d/index.js#L145) after const hashlist = ...
-<br/>e.g. `const hashlist = ["nftHash1","nftHash2", "nftHash3"];`
+Get a json hashlist array of the nfts that you want to burn, paste it into `hashList.json`, matching the array bracket formatting
+<br/>*e.g.* https://github.com/Swertin/BulkNftBurnTool/blob/c5f548f72371e57c0f8f3deb8e0ba7f6bbf67ae1/hashList.json#L1-L5
 
 
 ## To Run:
