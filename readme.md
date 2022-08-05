@@ -1,8 +1,8 @@
 Commands to install:
 
-git clone 
+git clone https://github.com/Swertin/BulkNftBurnTool.git
 
-cd burnFullNftTool
+cd BulkNftBurnTool
 
 Ensure you have the latest version of node.js
 
@@ -24,6 +24,7 @@ Export private key from Phantom, paste it directly into Treasury as "Treasury=pR
 Paste your RPC directly into RPC as "RPC=https://quicknode..."
 
 Get a json hashlist array of the nfts that you want to burn, paste it in line 145 after const hashlist =, e.g. "const hashlist = ["nftHash1","nftHash2", "nftHash3"];
+
 
 To Run:
 
