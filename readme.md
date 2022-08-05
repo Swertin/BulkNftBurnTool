@@ -1,4 +1,4 @@
-Commands to install:
+#Commands to install:
 
 git clone https://github.com/Swertin/BulkNftBurnTool.git
 
@@ -15,7 +15,7 @@ To install dependencies with npm:
 npm i
 
 
-To Setup:
+#To Setup:
 
 Make a copy of .env-example, and name it as: .env
 
@@ -26,6 +26,6 @@ Paste your RPC directly into RPC as "RPC=https://quicknode..."
 Get a json hashlist array of the nfts that you want to burn, paste it in line 145 after const hashlist =, e.g. "const hashlist = ["nftHash1","nftHash2", "nftHash3"];
 
 
-To Run:
+#To Run:
 
 node index.js
