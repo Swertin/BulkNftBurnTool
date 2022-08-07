@@ -1,3 +1,4 @@
+Hey Y00ts :)
 # Tool Purpose
 This tool was created to utilize the burnNFT instruction released in the [Metaplex Token Metadata Standard v1.3](https://docs.metaplex.com/programs/token-metadata/changelog/v1.3). You can use it to burn a bulk list of NFTs, and reclaim funds locked up in token, metadata and edition accounts. Keep in mind, once a token is burned, it's gone forever.
 
